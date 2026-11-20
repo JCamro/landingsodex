@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-alert: var(--alert);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Tokens de DESIGN.md. Claro por defecto; oscuro con la clase .dark */
+:root {
+  --background: #FBF7F4;
+  --foreground: #2A0A0E;
+  --card: #FFFFFF;
+  --card-foreground: #2A0A0E;
+  --popover: #FFFFFF;
+  --popover-foreground: #2A0A0E;
+  --primary: #B3001B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F3E8E3;
+  --secondary-foreground: #2A0A0E;
+  --muted: #F3E8E3;
+  --muted-foreground: #6B4A4F;
+  --accent: #F3E8E3;
+  --accent-foreground: #2A0A0E;
+  --destructive: #B91C1C;
+  --border: #E8D9D4;
+  --input: #E8D9D4;
+  --ring: #B3001B;
+  --highlight: #F5C400;
+  --highlight-foreground: #2A0A0E;
+  --alert: #B45309;
+  --chart-1: #B3001B;
+  --chart-2: #F5C400;
+  --chart-3: #6B4A4F;
+  --chart-4: #B45309;
+  --chart-5: #2A0A0E;
+  --radius: 0.75rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #2A0A0E;
+  --sidebar-primary: #B3001B;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F3E8E3;
+  --sidebar-accent-foreground: #2A0A0E;
+  --sidebar-border: #E8D9D4;
+  --sidebar-ring: #B3001B;
+}
+
+.dark {
+  --background: #140508;
+  --foreground: #F8EFEA;
+  --card: #22090E;
+  --card-foreground: #F8EFEA;
+  --popover: #22090E;
+  --popover-foreground: #F8EFEA;
+  --primary: #E5334B;
+  --primary-foreground: #140508;
+  --secondary: #2E1017;
+  --secondary-foreground: #F8EFEA;
+  --muted: #2E1017;
+  --muted-foreground: #C9AFB3;
+  --accent: #2E1017;
+  --accent-foreground: #F8EFEA;
+  --destructive: #F87171;
+  --border: #3A1A20;
+  --input: #3A1A20;
+  --ring: #E5334B;
+  --highlight: #FFE11A;
+  --highlight-foreground: #140508;
+  --alert: #F59E0B;
+  --chart-1: #E5334B;
+  --chart-2: #FFE11A;
+  --chart-3: #C9AFB3;
+  --chart-4: #F59E0B;
+  --chart-5: #F8EFEA;
+  --sidebar: #22090E;
+  --sidebar-foreground: #F8EFEA;
+  --sidebar-primary: #E5334B;
+  --sidebar-primary-foreground: #140508;
+  --sidebar-accent: #2E1017;
+  --sidebar-accent-foreground: #F8EFEA;
+  --sidebar-border: #3A1A20;
+  --sidebar-ring: #E5334B;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Evita scroll horizontal por bandas a todo el ancho (w-screen). `clip` no rompe `sticky`. */
+    overflow-x: clip;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
