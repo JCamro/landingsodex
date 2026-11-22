@@ -88,6 +88,30 @@ function StepDots({ active }: { active: number }) {
   );
 }
 
+function StepPacks({ active }: { active: number }) {
+  const reduce = useReducedMotion();
+  return (
+    <div className="relative aspect-[1.45] w-24 shrink-0 [perspective:900px] lg:w-full lg:max-w-[420px]">
+      {(["sachet", "inca"] as const).map((pack, index) => {
+        const leading = active % 2 === index;
+        const pose = stepPoses[active];
+        return (
+          <motion.div key={pack} initial={false}
+            role="img" aria-label={`Sodex ${index ? "Inca Kola" : "Kola Escocesa"}${leading ? `, paso ${active + 1}` : ""}`}
+            className={`absolute top-[8%] aspect-square w-[64%] ${index ? "right-0" : "left-0"} [transform-style:preserve-3d]`}
+            style={{ zIndex: leading ? 2 : 1 }}
+            animate={{ scale: leading ? 1 : 0.66, y: leading ? "7%" : "-12%", rotateZ: leading ? 0 : index ? 8 : -8 }}
+            transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 155, damping: 24 }}>
+            <Sachet3D inca={index === 1} alt="" idle={leading}
+              target={leading ? pose : { x: 0.07, y: index ? -0.18 : 0.18 }}
+              back={leading && Math.cos(pose.y) < 0} />
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function Steps() {
   const [active, setActive] = useState(0);
 
@@ -112,17 +136,8 @@ export function Steps() {
         {/* Panel fijo: en escritorio, el sobre 3D centrado en pantalla con los puntos debajo.
             En móvil, solo una franja con los puntos pegada bajo el encabezado. */}
         <div className="sticky top-16 z-10 -mx-4 flex justify-center border-b border-border/60 bg-background/85 px-4 py-2 backdrop-blur-md sm:-mx-8 sm:px-8 lg:top-16 lg:mx-0 lg:h-[calc(100svh-4rem)] lg:flex-col lg:items-center lg:gap-8 lg:self-start lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
-          <div className="relative hidden w-full max-w-[420px] lg:block">
-            <div
-              aria-hidden="true"
-              className="absolute inset-[12%] rounded-full bg-primary/25 blur-3xl"
-            />
-            <Sachet3D
-              alt={`Empaque de condón en 3D, mostrando el paso ${active + 1}`}
-              target={stepPoses[active]}
-            />
-          </div>
-          <StepDots active={active} />
+          <StepPacks active={active} />
+          <div className="flex items-center"><StepDots active={active} /></div>
         </div>
 
         <ol className="border-t border-border">

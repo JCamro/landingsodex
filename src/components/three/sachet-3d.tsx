@@ -8,13 +8,13 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import type { SachetSceneProps } from "./sachet-scene";
 
 // Imagen fija: se ve mientras carga el 3D y si el navegador no tiene WebGL.
-function Fallback({ alt, priority }: { alt: string; priority?: boolean }) {
+function Fallback({ alt, priority, inca, back }: { alt: string; priority?: boolean; inca?: boolean; back?: boolean }) {
   return (
     <Image
-      src="/img/sachet-front.webp"
+      src={`/img/${inca ? "inca" : "sachet"}-${back ? "back" : "front"}.webp`}
       alt={alt}
-      width={723}
-      height={734}
+      width={inca ? 744 : 723}
+      height={inca ? 744 : 734}
       priority={priority}
       className="h-auto w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.35)]"
     />
@@ -32,7 +32,9 @@ function hasWebGL() {
   if (webglSupport === undefined) {
     try {
       const canvas = document.createElement("canvas");
-      webglSupport = !!(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+      const gl = canvas.getContext("webgl2");
+      webglSupport = !!gl;
+      gl?.getExtension("WEBGL_lose_context")?.loseContext();
     } catch {
       webglSupport = false;
     }
@@ -41,28 +43,20 @@ function hasWebGL() {
 }
 const noop = () => () => {};
 
-// En pantallas estrechas (móvil) se muestra la imagen fija: el 3D pesa mucho en CPUs modestas.
-const SMALL_QUERY = "(max-width: 639px)";
-function subscribeSmall(callback: () => void) {
-  const mq = window.matchMedia(SMALL_QUERY);
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-}
-const isSmall = () => window.matchMedia(SMALL_QUERY).matches;
 
 type Props = Omit<SachetSceneProps, "active" | "instant"> & {
   className?: string;
+  back?: boolean;
   alt: string;
   /** Muestra la imagen de respaldo con prioridad (úsalo en el sobre del hero, que es el LCP). */
   priority?: boolean;
 };
 
-export function Sachet3D({ className, alt, idle = true, interactive, priority, ...scene }: Props) {
+export function Sachet3D({ className, alt, idle = true, interactive, priority, back, ...scene }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "200px" });
   const reduce = useReducedMotion();
   const webgl = useSyncExternalStore(noop, hasWebGL, () => false);
-  const small = useSyncExternalStore(subscribeSmall, isSmall, () => true);
 
   // Solo se monta la escena cuando el bloque es visible y el navegador está libre,
   // para que la página pinte primero y el JS de three.js no compita con el primer render.
@@ -85,7 +79,7 @@ export function Sachet3D({ className, alt, idle = true, interactive, priority, .
   const [ready, setReady] = useState(false);
   const handleReady = useCallback(() => setReady(true), []);
 
-  const showScene = webgl && mounted && !small;
+  const showScene = webgl && mounted && !reduce;
 
   return (
     <div ref={ref} className={`relative aspect-square ${className ?? ""}`}>
@@ -94,7 +88,7 @@ export function Sachet3D({ className, alt, idle = true, interactive, priority, .
           showScene && ready ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       >
-        <Fallback alt={alt} priority={priority} />
+        <Fallback alt={showScene && ready ? "" : alt} priority={priority} inca={scene.inca} back={back} />
       </div>
       {showScene && (
         <div className="absolute inset-0" role="img" aria-label={alt}>

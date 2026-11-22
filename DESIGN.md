@@ -29,6 +29,8 @@ Cercana, clara y confiable. Con energía (rojo y amarillo) pero sobria: es conte
 Reglas: el amarillo es acento, **no** color de texto sobre fondo claro (no pasa contraste). El rojo no se usa solo para comunicar peligro: acompañar siempre con icono o texto.
 
 ## Tipografía
+La portada conserva el fondo continuo y la cuadrícula. Para Inca Kola se suman azul profundo (`#021B80`), reflejo azul (`#3C86E0`) y amarillo (`#FDDD04`) tomados del empaque. No sustituyen al rojo de las acciones de la guía.
+
 - **Títulos:** Bricolage Grotesque (700–800), tamaños fluidos con `clamp()`.
 - **Cuerpo:** Inter (400–600), 16–18 px, interlineado 1.6, ancho de línea máx. 70 caracteres.
 - Cargar con `next/font` para evitar saltos de diseño.
@@ -49,7 +51,7 @@ Reglas: el amarillo es acento, **no** color de texto sobre fondo claro (no pasa 
 ## 3D (sobre)
 Implementado en `src/components/three/` (`Sachet3D` es el componente a usar). Poses por paso en `stepPoses` dentro de `steps.tsx`.
 - Se carga después del evento `load` y con el navegador libre (no bloquea el primer render).
-- En pantallas menores de 640 px se muestra solo la imagen fija; no se carga three.js.
+- En móvil también se muestran ambos empaques en WebGL cuando está disponible. Las imágenes de respaldo aparecen mientras cargan los modelos.
 - Sin WebGL o con movimiento reducido: imagen fija, sin giros.
 - Disco con grosor, textura = **frente del empaque recortado**; el reverso solo si se recorta también (opcional).
 - Iluminación suave y reflejo metálico leve, acorde al foil.

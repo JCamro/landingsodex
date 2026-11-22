@@ -9,10 +9,12 @@ import * as THREE from "three";
 export type SachetTarget = { x: number; y: number };
 
 export type SachetSceneProps = {
+  inca?: boolean;
   /** Rotación objetivo en radianes. El sobre se mueve suavemente hacia ella. */
   target: SachetTarget;
   /** Giro extra en Y que llega desde el scroll (opcional). */
   spin?: MotionValue<number>;
+  pitch?: MotionValue<number>;
   /** El sobre se inclina siguiendo el cursor. */
   interactive?: boolean;
   /** Flota y oscila suavemente cuando no hay interacción. */
@@ -44,8 +46,10 @@ function createPillowGeometry() {
 }
 
 function Sachet({
+  inca,
   target,
   spin,
+  pitch,
   interactive,
   idle,
   instant,
@@ -54,8 +58,8 @@ function Sachet({
   const group = useRef<THREE.Group>(null);
   const geometry = useMemo(() => createPillowGeometry(), []);
   const [front, back] = useTexture([
-    "/textures/sachet-front.webp",
-    "/textures/sachet-back.webp",
+    inca ? "/img/inca-front.webp" : "/textures/sachet-front.webp",
+    inca ? "/img/inca-back.webp" : "/textures/sachet-back.webp",
   ]);
 
   useMemo(() => {
@@ -79,7 +83,7 @@ function Sachet({
     const floatX = idle ? Math.sin(t * 0.8) * 0.05 : 0;
     const floatY = idle ? Math.sin(t * 0.6) * 0.1 : 0;
 
-    const x = target.x + tiltX + floatX;
+    const x = target.x + (pitch?.get() ?? 0) + tiltX + floatX;
     const y = target.y + (spin?.get() ?? 0) + tiltY + floatY;
 
     if (instant) {
@@ -111,7 +115,7 @@ function Sachet({
       {/* Canto del sobre */}
       <mesh>
         <torusGeometry args={[RADIUS, 0.012, 12, 160]} />
-        <meshStandardMaterial color="#7a0c18" metalness={0.6} roughness={0.35} />
+        <meshStandardMaterial color={inca ? "#102a76" : "#7a0c18"} metalness={0.6} roughness={0.35} />
       </mesh>
     </group>
   );
