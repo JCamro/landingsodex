@@ -1,4 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Guía de salud sexual
+
+Landing informativa sobre el uso del condón, las ITS y métodos de cuidado. La guía del proyecto, sus decisiones y el flujo de trabajo están documentados en [`docs/`](docs/).
+
+## Empezar
+
+Requisitos: Node.js y pnpm.
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Abrí [http://localhost:3000](http://localhost:3000).
+
+## Antes de entregar cambios
+
+```bash
+pnpm lint
+pnpm build
+```
+
+## Documentación del producto
+
+- [Brief: objetivo, público y alcance](docs/BRIEF.md)
+- [Contenido de la guía](docs/CONTENT.md)
+- [Sistema visual](DESIGN.md)
+- [Plan y estado del proyecto](docs/PLAN.md)
+- [Flujo paso a paso con documentación y agentes](docs/FLUJO_TRABAJO.md)
+
+Para aprender cómo se organiza una mejora desde el pedido hasta la verificación, empezá por [`docs/FLUJO_TRABAJO.md`](docs/FLUJO_TRABAJO.md).
 
 ## Getting Started
 

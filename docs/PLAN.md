@@ -17,14 +17,14 @@
 | 3b | Pulido visual | ✅ | Franja ScrollVelocity, iconos, numeración, cierre a todo color |
 | 3c | Ajuste de feedback: estilo editorial | ✅ | Sin tarjetas genéricas ni cifras decorativas |
 | 4 | Sobre 3D | ✅ | `src/components/three/` — disco abombado, texturas, reflejos sin HDR externo, respaldo en imagen |
-| 5 | 3D unido al scroll y a los pasos | ✅ | Hero: sigue cursor y gira al bajar. Pasos: pose distinta en cada paso (solo escritorio) |
+| 5 | Modelos 3D de ambos empaques en hero y pasos | ✅ | Frente y reverso, interacción táctil y animación. Los pasos alternan protagonismo sin desmontar los dos modelos. Commit `c11b4ca`. |
 | 5b | Navegación | ✅ | Tema claro/oscuro, icono de preservativo, sección activa, barra de lectura, menú lateral móvil |
 | 5c | Ajustes finales de feedback | ✅ | Sin etiquetas flotantes en el hero, menú sin desbordes en pantallas estrechas |
 | 5d | Sección de pasos sin repetición | ✅ | El panel izquierdo ya no repite el título ni usa "06/08" ni barra: sobre 3D grande centrado en pantalla y 8 puntos clicables (el activo se alarga). En móvil, franja fija solo con los puntos |
 
 Verificado: `npm run lint` y `npm run build` pasan. Revisado en navegador en escritorio y móvil.
 
-**Sin commit todavía.** Los cambios están en el árbol de trabajo.
+La integración visual quedó guardada localmente en `c11b4ca` (`feat: showcase both Sodex flavors in 3D`), rama `feat/sodex-inca-kola`. No se hizo push.
 
 ## Qué queda (en orden)
 
@@ -43,13 +43,15 @@ Cambios realizados:
 - [x] **Estructura de la lista de ITS:** `dl` ahora contiene solo grupos `div > dt + dd` válidos.
 - [x] **Movimiento reducido:** título animado (`BlurTitle`), animaciones del encabezado, del menú y del botón de tema respetan `prefers-reduced-motion`.
 - [x] **3D diferido:** three.js se carga después del evento `load` y cuando el navegador está libre. Antes bloqueaba el primer render (TBT de escritorio 4.1 s → 0.84 s).
-- [x] **Móvil sin 3D:** en pantallas de menos de 640 px se muestra la imagen fija del sobre y no se carga three.js. Es una decisión de rendimiento; si se quiere el 3D también en móvil, se cambia en `sachet-3d.tsx`.
+- [x] **3D en móvil:** se muestran los modelos WebGL también en pantallas pequeñas; las imágenes de empaque sirven de respaldo durante la carga y cuando WebGL no está disponible.
 - [x] **Imagen del hero con prioridad** (`priority`), para que el LCP llegue antes.
 - [x] **Limpieza:** no quedan componentes de React Bits sin uso (SpotlightCard, CountUp y ShinyText ya se habían retirado). En uso: BlurText, GradientText, Magnet, ScrollVelocity.
 
 Pendiente, fuera de esta fase (para una pasada posterior si hace falta):
 - Hidratación de React en móvil: el resto del costo (~3 s de scripting en CPU lento) viene de hidratar la página. Se podría reducir cargando en diferido las secciones de abajo del pliegue.
 - Lighthouse en este equipo renderiza el 3D por software (sin GPU), lo que penaliza un poco la medición de escritorio. En un equipo con GPU el resultado real será mejor.
+- **Línea base móvil de la integración dual 3D:** Chrome headless con SwiftShader, producción, 390 × 844 CSS px, DPR 3 y caché desactivada. Tres corridas: hero listo en 5,6–7,7 s; 3–4 FPS durante giro táctil; 499 KiB de JavaScript y 613 KiB de recursos de textura/arte 3D. Tras visitar portada y pasos quedaron cuatro lienzos, dos por sección. En 1 → 2 → 3 → 2 se conservaron los lienzos. Es una referencia de renderizado por software, no FPS de teléfono real. Procedimiento y límites: `docs/FLUJO_TRABAJO.md`.
+- **Siguiente trabajo técnico (pendiente):** comparar una escena/lienzo compartido por sección contra esta línea base, conservando los dos modelos y probando gestos y navegación en móvil. Medir en dispositivos reales antes de prometer rendimiento.
 - Prueba con teclado y lector de pantalla hecha solo de forma automatizada (Lighthouse); falta una prueba manual.
 
 ### Fase 7 — Contenido y marca (antes de publicar)

@@ -1,0 +1,60 @@
+.foil-stage {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 34rem);
+  aspect-ratio: 1.14;
+  margin-inline: auto;
+  color: var(--foreground);
+}
+.foil-orbit {
+  position: absolute; inset: 9% -2% 14%;
+  border: 1px dashed color-mix(in srgb, var(--primary) 28%, transparent);
+  border-right-color: color-mix(in srgb, var(--inca-glint) 65%, transparent);
+  border-top-color: color-mix(in srgb, var(--inca-yellow) 45%, transparent);
+  border-radius: 50%; transform: rotate(-24deg);
+  pointer-events: none; z-index: -1;
+}
+.foil-red, .foil-blue { position: absolute; text-align: center; }
+.foil-red { --light: var(--primary); --entry-x: -18px; --entry-roll: -8deg; left: -3%; top: 21%; width: 70%; z-index: 2; }
+.foil-blue { --light: var(--inca-glint); --entry-x: 18px; --entry-roll: 8deg; right: -3%; top: -5%; width: 56%; }
+@media (prefers-reduced-motion: no-preference) {
+  .foil-red, .foil-blue { animation: foil-arrive 720ms cubic-bezier(.18,.74,.22,1) backwards; }
+  .foil-blue { animation-delay: 110ms; }
+}
+@keyframes foil-arrive {
+  from { opacity: .25; transform: translate(var(--entry-x), 18px) scale(.83) rotate(var(--entry-roll)); }
+  to { opacity: 1; transform: none; }
+}
+.foil-blue:is(:hover,:focus-within) { z-index: 3; }
+.foil-red::before,.foil-blue::before {
+  content: ""; position: absolute; inset: -16% -20% 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse, color-mix(in srgb,var(--light) 32%, transparent),transparent 69%);
+}
+.foil-blue { isolation: isolate; }
+.foil-blue::before { background: radial-gradient(ellipse, var(--inca-blue), transparent 68%); opacity: .35; }
+.foil-pack { animation: foil-drift 5s ease-in-out infinite alternate; }
+.foil-blue .foil-pack { animation-delay: -3s; }
+@keyframes foil-drift { from { translate: 0 3px; rotate: -2deg; } to { translate: 0 -5px; rotate: 1deg; } }
+@media (prefers-reduced-motion: reduce) { .foil-pack { animation: none; } }
+.foil-pack {
+  position: relative; display: block; width: 100%; aspect-ratio: 1;
+  perspective: 800px; touch-action: pan-y pinch-zoom; cursor: grab; user-select: none;
+}
+.foil-pack:active { cursor: grabbing; }
+.foil-disc {
+  display: block; position: absolute; inset: 0;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+.foil-face { position: absolute; inset: 0; backface-visibility: hidden; transform: translateZ(2px); }
+.foil-face img { object-fit: contain; filter: drop-shadow(0 14px 9px #08091970); }
+.foil-reverse { transform: rotateY(180deg) translateZ(2px); }
+.foil-glint {
+  position: absolute; inset: 2%; border-radius: 50%; pointer-events: none;
+  background-image: linear-gradient(113deg, transparent 37%, #fff3 48%, transparent 58%);
+  background-size: 260% 100%;
+}
+.foil-pack:focus-visible { outline: 3px solid #ffdc38; outline-offset: 3px; border-radius: 50%; }
+.foil-blue .foil-pack:focus-visible { outline-color: var(--inca-yellow); }
+.foil-hint { position: absolute; top: calc(100% + 1rem); width: 100%; text-align: center; color: var(--muted-foreground); font-size: .78rem; }
+@media (max-width: 639px) { .foil-stage { margin-bottom: 2rem; aspect-ratio: 1.05; } }

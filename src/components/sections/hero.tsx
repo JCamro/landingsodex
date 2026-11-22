@@ -1,42 +1,33 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useReducedMotion } from "motion/react";
 
 import { BlurTitle } from "@/components/blur-title";
 import Magnet from "@/components/reactbits/Magnet";
-import { Sachet3D } from "@/components/three/sachet-3d";
+import { FoilStage } from "@/components/three/foil-stage";
 import { hero } from "@/content/guide";
 
 export function Hero() {
   const reduce = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  // Al bajar por el hero, el sobre gira media vuelta y deja ver el reverso.
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-  const spin = useTransform(scrollYProgress, [0, 1], [0, Math.PI]);
 
   return (
     <section
-      ref={sectionRef}
       id="inicio"
-      className="relative isolate overflow-hidden border-b border-border/60"
+      className="relative isolate overflow-hidden border-b border-border/60 bg-background"
     >
       {/* Fondo: resplandor rojo y amarillo + cuadrícula suave. Funciona en claro y oscuro. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_80%_20%,color-mix(in_srgb,var(--primary)_30%,transparent),transparent_70%),radial-gradient(40%_40%_at_10%_90%,color-mix(in_srgb,var(--highlight)_18%,transparent),transparent_70%)]"
+        className="hero-brand-light absolute inset-0 -z-10"
       />
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10 opacity-40 [background-image:linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(70%_70%_at_50%_40%,#000,transparent)]"
       />
 
-      <div className="mx-auto grid w-full max-w-[1200px] items-center gap-12 px-4 pt-14 pb-10 sm:px-8 lg:min-h-[calc(100svh-12rem)] lg:grid-cols-[1.1fr_0.9fr] lg:pt-20">
-        <div className="flex flex-col items-start gap-7">
+      <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-12 px-4 pt-14 pb-10 sm:px-8 lg:min-h-[calc(100svh-12rem)] lg:grid-cols-[1.1fr_0.9fr] lg:pt-20">
+        <div className="flex min-w-0 flex-col items-start gap-7">
           {/* BlurText genera un <p>, que no puede ir dentro de <h1>; por eso el rol de encabezado va en un div. */}
           <div
             role="heading"
@@ -55,7 +46,7 @@ export function Hero() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
-            <Magnet magnetStrength={4} padding={60}>
+            <Magnet magnetStrength={4} padding={60} disabled={!!reduce}>
               <a
                 href="#pasos"
                 className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-7 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
@@ -72,26 +63,7 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Sobre en 3D: sigue al cursor y gira con el scroll. */}
-        <div className="relative mx-auto flex w-full max-w-md items-center justify-center lg:max-w-none">
-          <div
-            aria-hidden="true"
-            className="absolute inset-[6%] rounded-full bg-primary/35 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-[2%] rounded-full border border-dashed border-primary/30"
-          />
-          <Sachet3D
-            className="w-[88%] sm:w-[80%]"
-            priority
-            alt="Empaque de condón redondo en rojo, con la pestaña «Destapa aquí». Gira al moverte por la página."
-            target={{ x: 0.1, y: -0.35 }}
-            spin={spin}
-            interactive
-          />
-
-        </div>
+        <FoilStage />
       </div>
 
       {/* Indicación para bajar */}
